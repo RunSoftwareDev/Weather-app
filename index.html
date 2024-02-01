@@ -12,7 +12,7 @@
     <div class="card">
         <div class="search">
             <input type="text" id="cityInput" placeholder="Enter City" spellcheck="false">
-            <input type="text" id="stateInput" placeholder="Enter tate" spellcheck="false">
+            <input type="text" id="stateInput" placeholder="Enter State" spellcheck="false">
             <button id="searchBtn"><img src="images/search.png" alt="magnifying glass for searching"></button>
         </div>
     
@@ -40,77 +40,54 @@
     </div>
     
     
-        <script>
-const apiKey = "c17b60968df6b08bfe36755807d2a540";
-const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=imperial&q=";
+    <script>
+        const apiKey = "c17b60968df6b08bfe36755807d2a540";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=imperial&q=";
 
-const searchBtn = document.getElementById("searchBtn");
-const weatherBlock = document.querySelector(".weather");
-const weatherIconElement = document.getElementById("weatherIcon");
-const cityInput = document.getElementById("cityInput");
-const stateInput = document.getElementById("stateInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const weatherBlock = document.querySelector(".weather");
+        const weatherIconElement = document.getElementById("weatherIcon");
+        const cityInput = document.getElementById("cityInput");
+        const stateInput = document.getElementById("stateInput");
 
-async function checkWeather(city, state) {
-    const response = await fetch(apiUrl + city + "," + state + '&appid=' + apiKey);
-    const data = await response.json();
+        async function checkWeather(city, state) {
+            const response = await fetch(apiUrl + city + "," + state + '&appid=' + apiKey);
 
-    console.log(data);
+            if(response.status === 404) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+            } else {
+                const data = await response.json();
 
-    document.querySelector(".city.name").innerHTML = data.name;
-    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°F";
-    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
-    document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + "mph";
+                document.querySelector(".city.name").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°F";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + "mph";
 
-    // Update weather icon based on weather conditions
-    switch (data.weather[0].main) {
-        case "Clouds":
-            weatherIconElement.innerHTML = "Cloudy";
-            break;
-        case "Rain":
-            weatherIconElement.innerHTML = "Rainy";
-            break;
-        case "Drizzle":
-            weatherIconElement.innerHTML = "Drizzle";
-            break;
-        case "Clear":
-            weatherIconElement.innerHTML = "Clear";
-            break;
-        case "Mist":
-            weatherIconElement.innerHTML = "Misty";
-            break;
-        // Add more cases for other weather conditions as needed
-        default:
-            weatherIconElement.innerHTML = "Weather Condition Unknown"; // Default icon if weather condition is unknown
-            break;
-    }
+                // Show the weather block
+                weatherBlock.style.display = "block";
+            }
+        }
 
-    // Show the weather block
-    weatherBlock.style.display = "block";
-}
+        // Function to handle search when Enter key is pressed
+        function handleEnterKeyPress(event) {
+            if (event.key === "Enter") {
+                const city = cityInput.value;
+                const state = stateInput.value;
+                checkWeather(city, state);
+            }
+        }
 
-// Function to handle search when Enter key is pressed
-function handleEnterKeyPress(event) {
-    if (event.key === "Enter") {
-        const city = cityInput.value;
-        const state = stateInput.value;
-        checkWeather(city, state);
-    }
-}
+        // Event listeners for Enter key press on input fields
+        cityInput.addEventListener("keydown", handleEnterKeyPress);
+        stateInput.addEventListener("keydown", handleEnterKeyPress);
 
-// Event listeners for Enter key press on input fields
-cityInput.addEventListener("keydown", handleEnterKeyPress);
-stateInput.addEventListener("keydown", handleEnterKeyPress);
-
-searchBtn.addEventListener("click", () => {
-    const city = cityInput.value;
-    const state = stateInput.value;
-    checkWeather(city, state);
-});
-
-
-
-
-        </script>
+        searchBtn.addEventListener("click", () => {
+            const city = cityInput.value;
+            const state = stateInput.value;
+            checkWeather(city, state);
+        });
+    </script>
 
 </body>
 
