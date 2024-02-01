@@ -106,3 +106,19 @@ body {
 .weather {
     display: none;
 }
+
+/* Media query for smaller screens (e.g., mobile devices) */
+@media only screen and (max-width: 600px) {
+    .card {
+        padding: 20px; /* Reduce padding for smaller screens */
+    }
+
+    .search input {
+        width: calc(100% - 80px); /* Adjust width of input fields */
+        margin-right: 0; /* Remove margin-right for input fields */
+    }
+
+    .search button {
+        margin-left: auto; /* Move search button to the right */
+    }
+}
